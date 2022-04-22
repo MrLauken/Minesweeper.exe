@@ -64,8 +64,10 @@ def revealem(screen, rect):
                 checksum(k)
                 k-=1
             elif k>3:
+                checksum(k)
                 a = False
             else:
+                checksum(k)
                 a=False
         k = boardpos.index(rect)
     if board[k+1]!="*":
@@ -76,54 +78,91 @@ def revealem(screen, rect):
                 checksum(k)
                 k+=1
             elif k>3:
+                checksum(k)
                 a = False
             else:
+                checksum(k)
                 a=False
         k = boardpos.index(rect)
     if board[k+16]!="*":
         a=True
         while a:
-            if board[k+16] != "*":
-                pygame.draw.rect(screen, (200, 200, 200), boardpos[k+16])
-                checksum(k)
-                k+=16
-            elif k>3:
+            try:
+                if board[k+16] != "*":
+                    pygame.draw.rect(screen, (200, 200, 200), boardpos[k+16])
+                    checksum(k)
+                    k+=16
+                elif k>3:
+                    checksum(k)
+                    a = False
+                else:
+                    checksum(k)
+                    a=False
+            except IndexError:
                 a = False
-            else:
-                a=False
         k = boardpos.index(rect)
     if board[k-16]!="*":
         a=True
         while a:
-            if board[k-16] != "*":
-                pygame.draw.rect(screen, (200, 200, 200), boardpos[k-16])
-                checksum(k)
-                k-=16
-            elif k>3:
+            try:
+                if board[k-16] != "*":
+                    pygame.draw.rect(screen, (200, 200, 200), boardpos[k-16])
+                    checksum(k)
+                    k-=16
+                elif k>3:
+                    checksum(k)
+                    a = False
+                else:
+                    checksum(k)
+                    a=False
+            except IndexError:
                 a = False
-            else:
-                a=False
-        k = boardpos.index(rect)
+    
+
             
 def checksum(k):
     fontgrid = pygame.font.Font('freesansbold.ttf', 20)
     number=0
-    if board[k+16]=="*":
-        number+=1
-    if board[k-16]=="*":
-        number+=1
-    if board[k+17]=="*":
-        number+=1
-    if board[k+15]=="*":
-        number+=1
-    if board[k-17]=="*":
-        number+=1
-    if board[k-15]=="*":
-        number+=1
-    if board[k-1]=="*":
-        number+=1
-    if board[k+1]=="*":
-        number+=1
+    try:
+        if board[k+16]=="*":
+            number+=1
+    except IndexError: 
+        print()
+    try:
+        if board[k-16]=="*":
+            number+=1
+    except IndexError: 
+        print()
+    try:    
+        if board[k+17]=="*":
+            number+=1
+    except IndexError:
+        print()
+    try:     
+        if board[k+15]=="*":
+            number+=1
+    except IndexError:
+        print()
+    try:    
+        if board[k-17]=="*":
+            number+=1
+    except IndexError:
+        print()
+    try:
+        if board[k-15]=="*":
+            number+=1
+    except IndexError:
+        print()
+    try:
+        if board[k-1]=="*":
+            number+=1
+    except IndexError:
+        print()
+    try:         
+        if board[k+1]=="*":
+            number+=1
+    except IndexError:
+        print()
     o = fontgrid.render(str(number), True, (0, 0, 0))   
     screen.blit(o, boardpos[k])
 
