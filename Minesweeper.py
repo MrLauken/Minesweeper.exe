@@ -1,18 +1,19 @@
 import pygame 
 import random
 
+
 board = []
 boardpos = []
-k=6
+y=6
 
 for x in range(0,256):
-    z = random.randint(0,k)
+    z = random.randint(0,y)
     if z == 1 or 0:
         board.append("*")
-        k=3
+        y=3
     else:
         board.append(" ")
-        k=4
+        y=4
 
 
 
@@ -38,7 +39,7 @@ def loosegame(screen):
     for x in range(0,16):
         for z in range(0,16):
             boardpos.append(pygame.draw.rect(screen, (145, 145, 145), pygame.Rect(5+n*z, 75+n*x, n, n)))
-            k = fontgrid.render(str(board[p]), True, (164, 126, 115))   
+            k = fontgrid.render(str(board[p]), True, (255, 30, 39))   
             screen.blit(k, (20+n*z, 90+n*x))
             p+=1
     for x in range(0,17):
@@ -60,6 +61,7 @@ def revealem(screen, rect):
         while a:
             if board[k-1] != "*":
                 pygame.draw.rect(screen, (200, 200, 200), boardpos[k-1])
+                checksum(k)
                 k-=1
             elif k>3:
                 a = False
@@ -71,6 +73,7 @@ def revealem(screen, rect):
         while a:
             if board[k+1] != "*":
                 pygame.draw.rect(screen, (200, 200, 200), boardpos[k+1])
+                checksum(k)
                 k+=1
             elif k>3:
                 a = False
@@ -82,6 +85,7 @@ def revealem(screen, rect):
         while a:
             if board[k+16] != "*":
                 pygame.draw.rect(screen, (200, 200, 200), boardpos[k+16])
+                checksum(k)
                 k+=16
             elif k>3:
                 a = False
@@ -93,6 +97,7 @@ def revealem(screen, rect):
         while a:
             if board[k-16] != "*":
                 pygame.draw.rect(screen, (200, 200, 200), boardpos[k-16])
+                checksum(k)
                 k-=16
             elif k>3:
                 a = False
@@ -100,9 +105,36 @@ def revealem(screen, rect):
                 a=False
         k = boardpos.index(rect)
             
-
+def checksum(k):
+    fontgrid = pygame.font.Font('freesansbold.ttf', 20)
+    number=0
+    if board[k+16]=="*":
+        number+=1
+    if board[k-16]=="*":
+        number+=1
+    if board[k+17]=="*":
+        number+=1
+    if board[k+15]=="*":
+        number+=1
+    if board[k-17]=="*":
+        number+=1
+    if board[k-15]=="*":
+        number+=1
+    if board[k-1]=="*":
+        number+=1
+    if board[k+1]=="*":
+        number+=1
+    o = fontgrid.render(str(number), True, (0, 0, 0))   
+    screen.blit(o, boardpos[k])
 
     pygame.display.flip()
+
+def flag(x):
+    fontgrid = pygame.font.Font('freesansbold.ttf', 20)
+    o = fontgrid.render("X", True, (10, 10, 10))   
+    screen.blit(o, x)
+    pygame.display.flip()
+
 
 
     
@@ -115,21 +147,27 @@ pygame.display.set_caption('Minesweeper.exe')
 game(screen)
 pygame.display.flip()
 running = True
-
 while running:
     for event in pygame.event.get():
-
+    
         if event.type == pygame.QUIT:
             running = False
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            Lastclick = event.pos
-            print(Lastclick)
-            for x in boardpos:
-                if x.collidepoint(Lastclick):
-                    if board[boardpos.index(x)]=="*":
-                        loosegame(screen)
-                        break
-                    else:
-                        showsquares(screen, x)
+            if event.button == 1:
+                Lastclick = event.pos
+                for x in boardpos:
+                    if x.collidepoint(Lastclick):
+                        if board[boardpos.index(x)]=="*":
+                            loosegame(screen)
+                            break
+                        else:
+                            showsquares(screen, x)
+            elif event.button == 3:
+                Lastclick = event.pos
+                for x in boardpos:
+                    if x.collidepoint(Lastclick):
+                        flag(x)
+        
+        
                         
